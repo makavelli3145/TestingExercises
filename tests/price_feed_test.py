@@ -12,5 +12,10 @@ def test_fetch_current_price(monkeypatch):
 
     def mock_get(url, headers=None, params=None):
         # TODO: check if the symbol is valid, if not return an invalid data response
-        if "https://api.example.com/price/" in url:
-            return MockResponse({"price": 100.0}, 200)
+        valid_symbols = ['BTCUSD', 'ETHUSD', 'ADAUSD', 'LINKUSD']
+
+        requested_symbol = url.split('/')[-1]
+
+        if requested_symbol in valid_symbols:
+            if "https://api.example.com/price/" in url:
+                return MockResponse({"price": 100.0}, 200)
