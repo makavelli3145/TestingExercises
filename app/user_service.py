@@ -27,5 +27,6 @@ def add_user(db_conn, user: dict) -> bool:
         return True
 
     except Exception as e:
+        db_conn.rollback()
         print(f"Database error: {e}")
         raise
