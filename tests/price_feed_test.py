@@ -17,9 +17,13 @@ def test_fetch_current_price(monkeypatch):
         if requested_symbol in valid_symbols:
             if "https://api.example.com/price/" in url:
                 return MockResponse({"price": 100.0}, 200)
+            else:
+                return MockResponse({"error": f"404 not found"}, 404)
 
         else:
             return MockResponse({"error": f"Invalid symbol: {requested_symbol}"}, 400)
 
     monkeypatch.setattr("requests.get", mock_get)
     assert mock_get("https://api.example.com/price/BTCUSD").status_code == 200
+    assert mock_get("https://api.exampple.com/price/BTCUSD").status_code == 404
+    assert mock_get("https://api.exampple.com/price/USDZAR").status_code == 400
