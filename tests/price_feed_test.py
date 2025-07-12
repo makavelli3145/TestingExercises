@@ -1,5 +1,3 @@
-from unittest import mock
-
 import app
 
 def test_fetch_current_price(monkeypatch):
@@ -8,7 +6,7 @@ def test_fetch_current_price(monkeypatch):
             self.json_data = json_data
             self.status_code = status_code
         def json(self):
-            return self.json_data
+            return {"dada":self.json_data, "status_code":self.json_data}
 
     def mock_get(url, headers=None, params=None):
         # TODO: check if the symbol is valid, if not return an invalid data response
@@ -19,3 +17,9 @@ def test_fetch_current_price(monkeypatch):
         if requested_symbol in valid_symbols:
             if "https://api.example.com/price/" in url:
                 return MockResponse({"price": 100.0}, 200)
+
+        else:
+            return MockResponse({"error": f"Invalid symbol: {requested_symbol}"}, 400)
+
+    monkeypatch.setattr("requests.get", mock_get)
+    assert mock_get('BTCUSD').status_code == 200
