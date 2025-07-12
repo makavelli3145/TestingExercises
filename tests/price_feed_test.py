@@ -6,7 +6,7 @@ def test_fetch_current_price(monkeypatch):
             self.json_data = json_data
             self.status_code = status_code
         def json(self):
-            return {"dada":self.json_data, "status_code":self.json_data}
+            return {"data":self.json_data, "status_code":self.status_code}
 
     def mock_get(url, headers=None, params=None):
         # TODO: check if the symbol is valid, if not return an invalid data response
@@ -22,4 +22,4 @@ def test_fetch_current_price(monkeypatch):
             return MockResponse({"error": f"Invalid symbol: {requested_symbol}"}, 400)
 
     monkeypatch.setattr("requests.get", mock_get)
-    assert mock_get('BTCUSD').status_code == 200
+    assert mock_get("https://api.example.com/price/BTCUSD").status_code == 200
