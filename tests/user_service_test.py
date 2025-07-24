@@ -38,6 +38,15 @@ def test_add_user_success(db_connection):
     result = cursor.fetchone()
     assert result[0] == user["name"]
 
+def test_add_user_already_exists(db_connection):
+    cursor = db_connection.cursor()
+    cursor.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)")
+    db_connection.commit()
+
+    add_user(db_connection, {"name": "Makaveli"})
+    result = add_user(db_connection, {"name": "Makaveli"})
+    assert result[0] == 0
+
 def test_add_user_fail(db_connection):
     cursor = db_connection.cursor()
     cursor.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, name TEXT)")
